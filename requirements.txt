@@ -1,0 +1,9 @@
+streamlit
+pandas
+plotly
+google-cloud-aiplatform
+google-cloud-bigquery[pandas]
+python-pptx
+xlsxwriter
+pillow
+openpyxl
