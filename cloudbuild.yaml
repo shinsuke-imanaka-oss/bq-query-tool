@@ -1,20 +1,24 @@
 steps:
 # Dockerイメージをビルドするステップ
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/gemini-analysis-platform:$COMMIT_SHA', '.']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/streamlit-bq-tool:$COMMIT_SHA', '.']  # <- 実際のCloudRun名に変更
 
 # Cloud Runにデプロイするステップ
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
   - 'run'
   - 'deploy'
-  - 'streamlit-bq-tool' # ここを実際のCloud Runサービス名に合わせる
+  - 'streamlit-bq-tool' # <- 実際のCloudRun名に変更
   - '--image'
-  - 'gcr.io/$PROJECT_ID/gemini-analysis-platform:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/streamlit-bq-tool:$COMMIT_SHA' # <- 実際のCloudRun名に変更
   - '--region'
-  - 'us-central1' # ここを実際のCloud Runリージョンに合わせる
+  - 'us-central1' # <- リージョンを変更
   - '--platform'
   - 'managed'
   - '--allow-unauthenticated'
 images:
-- 'gcr.io/$PROJECT_ID/gemini-analysis-platform:$COMMIT_SHA'
+- 'gcr.io/$PROJECT_ID/gstreamlit-bq-tool:$COMMIT_SHA' # <- 実際のCloudRun名に変更
+
+# ログ設定を追加
+options:
+  logging: CLOUD_LOGGING_ONLY
