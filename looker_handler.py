@@ -66,6 +66,9 @@ def show_filter_ui(bq_client):
     """サイドバーに表示するフィルタUIを構築し、結果をsession_stateに保存する"""
     init_filters()
 
+    # フィルタの変更を追跡するための古い状態を保存
+    old_filters = st.session_state.filters.copy()
+
     # シート選択
     sheet_names = list(REPORT_SHEETS.keys())
     selected_sheet_name = st.selectbox(
@@ -103,6 +106,10 @@ def show_filter_ui(bq_client):
         "media": selected_media,
         "campaigns": selected_campaigns
     })
+    
+    # フィルタの変更を検出して再実行
+    if st.session_state.filters != old_filters:
+        st.rerun()
 
 def show_looker_studio_integration(bq_client, model, key_prefix=""):
     init_filters()  # filters初期化
@@ -114,10 +121,17 @@ def show_looker_studio_integration(bq_client, model, key_prefix=""):
     if "start_date" in filters and "end_date" in filters:
         params["p_start_date"] = filters["start_date"].strftime("%Y%m%d")
         params["p_end_date"] = filters["end_date"].strftime("%Y%m%d")
+    
+    # メディアとキャンペーンは、値がなくても空の文字列を渡す
     if filters.get("media"):
         params["p_media"] = ",".join(filters["media"])
+    else:
+        params["p_media"] = ""
+
     if filters.get("campaigns"):
         params["p_campaign"] = ",".join(filters["campaigns"])
+    else:
+        params["p_campaign"] = ""
 
     # URL生成
     params_json = json.dumps(params)
@@ -125,12 +139,11 @@ def show_looker_studio_integration(bq_client, model, key_prefix=""):
     base_url = f"https://lookerstudio.google.com/embed/reporting/{REPORT_ID}"
     final_url = f"{base_url}/page/{selected_page_id}?params={encoded_params}"
 
-    # ★★★ ここにデバッグ用のコードを追加 ★★★
+    # デバッグ情報
     st.subheader("💡 デバッグ情報")
     st.write(f"**生成されたURL:** `{final_url}`")
     st.write(f"**パラメータ辞書:** `{params}`")
     st.markdown("---")
-    # ★★★ ここまで ★★★
 
     # iframeで表示
     st.components.v1.iframe(final_url, height=600, scrolling=True)
@@ -138,7 +151,6 @@ def show_looker_studio_integration(bq_client, model, key_prefix=""):
 
     st.subheader("🤖 AIによる分析サマリー")
     with st.spinner("AIが現在の表示内容を分析中です..."):
-        # @st.cache_dataデコレータがついているので、引数が同じならキャッシュが返る
         comment = get_ai_dashboard_comment(
             _bq_client=bq_client,
             _model=model,
@@ -149,6 +161,5 @@ def show_looker_studio_integration(bq_client, model, key_prefix=""):
 
     # 再生成ボタンも用意
     if st.button("最新の情報で再生成", key=f"{key_prefix}_regenerate_summary"):
-        # キャッシュをクリアして再実行
         get_ai_dashboard_comment.clear()
         st.rerun()
