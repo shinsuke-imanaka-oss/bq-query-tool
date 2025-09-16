@@ -13,7 +13,7 @@ PROMPT_DEFINITIONS = {
 # あなたは広告分析の専門家です。
 # ユーザー指示: {user_input}
 # 分析対象: `vorn-digi-mktg-poc-635a.toki_air.LookerStudio_report_campaign`
-# カラム: Impressions, Clicks, CostIncludingFees, Conversions, ServiceNameJA, PromotionName, AccountName, CampaignName, Date, DayOfWeekJA, AllConversions, Cost, VideoViews, ConversionValue, AllConversionValue
+# カラム: Impressions, Clicks, CostIncludingFees, Conversions, ServiceNameJA, PromotionName, AccountName, CampaignName, Date, DayOfWeekJA, AllConversions, Cost, VideoViews, ConversionValue, AllConversionValue, ServiceNameJA_Media
 # 指標: CTR=Clicks/Impressions, CPA=CostIncludingFees/Conversions, CPC=CostIncludingFees/Clicks, CVR=Conversions/Clicks
 # ルール: ユーザーの指示に最も関連性の高い指標を選択してSQLを生成してください。CostはCostIncludingFeesを、ConversionsはConversionsを使用してください。
 # 出力: 実行可能な BigQuery SQL だけ返す（説明なし）
@@ -25,7 +25,7 @@ PROMPT_DEFINITIONS = {
 # あなたは広告分析の専門家です。
 # ユーザー指示: {user_input}
 # 分析対象: `vorn-digi-mktg-poc-635a.toki_air.LookerStudio_report_age_group`
-# カラム: Impressions, Clicks, CostIncludingFees, Conversions, AgeRange, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date, AllConversions, Cost, VideoViews
+# カラム: Impressions, Clicks, CostIncludingFees, Conversions, AgeRange, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date, AllConversions, Cost, VideoViews, ServiceNameJA_Media
 # 指標: CTR=Clicks/Impressions, CPA=CostIncludingFees/Conversions, CPC=CostIncludingFees/Clicks, CVR=Conversions/Clicks
 # ルール: ユーザーの指示に最も関連性の高い指標を選択してSQLを生成してください。CostはCostIncludingFeesを、ConversionsはConversionsを使用してください。分析ではAgeRangeでの比較を優先。
 # 出力: 実行可能な SQL だけ返す
@@ -37,7 +37,7 @@ PROMPT_DEFINITIONS = {
 # あなたは検索連動型広告の分析専門家です。
 # ユーザー指示: {user_input}
 # 分析対象: `vorn-digi-mktg-poc-635a.toki_air.LookerStudio_report_keyword`
-# カラム: Impressions, Clicks, CostIncludingFees, Conversions, Keyword, QualityScore, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date, AllConversions, Cost, VideoViews
+# カラム: Impressions, Clicks, CostIncludingFees, Conversions, Keyword, QualityScore, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date, AllConversions, Cost, VideoViews, ServiceNameJA_Media
 # 指標: CTR=Clicks/Impressions, CPA=CostIncludingFees/Conversions, CPC=CostIncludingFees/Clicks, CVR=Conversions/Clicks
 # ルール: ユーザーの指示に最も関連性の高い指標を選択してSQLを生成してください。CostはCostIncludingFeesを、ConversionsはConversionsを使用してください。Keyword単位の分析優先。
 # 出力: 実行可能な SQL だけ返す
@@ -49,7 +49,7 @@ PROMPT_DEFINITIONS = {
 # あなたはランディングページ最適化の専門家です。
 # ユーザー指示: {user_input}
 # 分析対象: `vorn-digi-mktg-poc-635a.toki_air.LookerStudio_report_final_url`
-# カラム: Impressions, Clicks, CostIncludingFees, Conversions, EffectiveFinalUrl, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date, AllConversions, Cost, VideoViews
+# カラム: Impressions, Clicks, CostIncludingFees, Conversions, EffectiveFinalUrl, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date, AllConversions, Cost, VideoViews, ServiceNameJA_Media
 # 指標: CTR=Clicks/Impressions, CPA=CostIncludingFees/Conversions, CPC=CostIncludingFees/Clicks, CVR=Conversions/Clicks
 # ルール: ユーザーの指示に最も関連性の高い指標を選択してSQLを生成してください。CostはCostIncludingFeesを、ConversionsはConversionsを使用してください。EffectiveFinalUrlごとのパフォーマンス分析優先
 # 出力: 実行可能な SQL だけ返す
@@ -61,7 +61,7 @@ PROMPT_DEFINITIONS = {
 # あなたは広告配信最適化の専門家です。
 # ユーザー指示: {user_input}
 # 分析対象: `vorn-digi-mktg-poc-635a.toki_air.LookerStudio_report_hourly`
-# カラム: Impressions, Clicks, CostIncludingFees, Conversions, HourOfDay, ServiceNameJA, PromotionName, AccountName, CampaignName, Date, AllConversions, Cost, VideoViews
+# カラム: Impressions, Clicks, CostIncludingFees, Conversions, HourOfDay, ServiceNameJA, PromotionName, AccountName, CampaignName, Date, AllConversions, Cost, VideoViews, ServiceNameJA_Media
 # 指標: CTR=Clicks/Impressions, CPA=CostIncludingFees/Conversions, CPC=CostIncludingFees/Clicks, CVR=Conversions/Clicks
 # ルール: ユーザーの指示に最も関連性の高い指標を選択してSQLを生成してください。CostはCostIncludingFeesを、ConversionsはConversionsを使用してください。HourOfDayごとのパフォーマンス傾向を優先
 # 出力: 実行可能な SQL だけ返す
@@ -75,7 +75,7 @@ PROMPT_DEFINITIONS = {
 # あなたは広告クリエイティブの分析専門家です。
 # ユーザー指示: {user_input}
 # 分析対象: `vorn-digi-mktg-poc-635a.toki_air.LookerStudio_report_ad`
-# カラム: Impressions, Clicks, CostIncludingFees, Conversions, Headline, AdName, AdTypeJA, HeadlineByAdType, Description1ByAdType, Description2ByAdType, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date
+# カラム: Impressions, Clicks, CostIncludingFees, Conversions, Headline, AdName, AdTypeJA, HeadlineByAdType, Description1ByAdType, Description2ByAdType, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date, ServiceNameJA_Media
 # 指標: CTR=Clicks/Impressions, CPA=CostIncludingFees/Conversions, CPC=CostIncludingFees/Clicks, CVR=Conversions/Clicks
 # ルール: ユーザーの指示に最も関連性の高い指標を選択してSQLを生成してください。CostはCostIncludingFeesを、ConversionsはConversionsを使用してください。HeadlineやAdNameなど広告クリエイティブ単位での分析を優先してください。
 # 出力: 実行可能な BigQuery SQL だけ返す（説明なし）
@@ -87,7 +87,7 @@ PROMPT_DEFINITIONS = {
 # あなたは広告運用専門家です。
 # ユーザー指示: {user_input}
 # 分析対象: `vorn-digi-mktg-poc-635a.toki_air.LookerStudio_report_ad_group`
-# カラム: Impressions, Clicks, CostIncludingFees, Conversions, AdGroupName_unified, ServiceNameJA, PromotionName, AccountName, CampaignName, Date
+# カラム: Impressions, Clicks, CostIncludingFees, Conversions, AdGroupName_unified, ServiceNameJA, PromotionName, AccountName, CampaignName, Date, ServiceNameJA_Media
 # 指標: CTR=Clicks/Impressions, CPA=CostIncludingFees/Conversions, CPC=CostIncludingFees/Clicks, CVR=Conversions/Clicks
 # ルール: ユーザーの指示に最も関連性の高い指標を選択してSQLを生成してください。CostはCostIncludingFeesを、ConversionsはConversionsを使用してください。AdGroupName_unified単位での分析を優先してください。
 # 出力: 実行可能な BigQuery SQL だけ返す（説明なし）
@@ -99,7 +99,7 @@ PROMPT_DEFINITIONS = {
 # あなたはエリアマーケティングの専門家です。
 # ユーザー指示: {user_input}
 # 分析対象: `vorn-digi-mktg-poc-635a.toki_air.LookerStudio_report_area`
-# カラム: Impressions, Clicks, CostIncludingFees, Conversions, RegionJA, ServiceNameJA, PromotionName, AccountName, CampaignName, Date
+# カラム: Impressions, Clicks, CostIncludingFees, Conversions, RegionJA, ServiceNameJA, PromotionName, AccountName, CampaignName, Date, ServiceNameJA_Media
 # 指標: CTR=Clicks/Impressions, CPA=CostIncludingFees/Conversions, CPC=CostIncludingFees/Clicks, CVR=Conversions/Clicks
 # ルール: ユーザーの指示に最も関連性の高い指標を選択してSQLを生成してください。CostはCostIncludingFeesを、ConversionsはConversionsを使用してください。RegionJAごとのパフォーマンス分析を優先してください。
 # 出力: 実行可能な BigQuery SQL だけ返す（説明なし）
@@ -111,7 +111,7 @@ PROMPT_DEFINITIONS = {
 # あなたは広告予算管理の専門家です。
 # ユーザー指示: {user_input}
 # 分析対象: `vorn-digi-mktg-poc-635a.toki_air.LookerStudio_report_budget`
-# カラム: CostIncludingFees, AccountBudgetIncludingFees, PromotionBudgetIncludingFees, AccountName, PromotionName, ServiceNameJA, Date
+# カラム: CostIncludingFees, AccountBudgetIncludingFees, PromotionBudgetIncludingFees, AccountName, PromotionName, ServiceNameJA, Date, ServiceNameJA_Media
 # ルール: ユーザーの指示に合わせて予算やコストに関する情報を集計するSQLを生成してください。主にCostIncludingFees（実績コスト）、PromotionBudgetIncludingFees（プロモーション予算）、AccountBudgetIncludingFees（アカウント予算）の比較や集計を行います。
 # 出力: 実行可能な BigQuery SQL だけ返す（説明なし）
 """
@@ -122,7 +122,7 @@ PROMPT_DEFINITIONS = {
 # あなたは広告配信最適化の専門家です。
 # ユーザー指示: {user_input}
 # 分析対象: `vorn-digi-mktg-poc-635a.toki_air.LookerStudio_report_campaign_device`
-# カラム: Impressions, Clicks, CostIncludingFees, Conversions, DeviceCategory, ServiceNameJA, PromotionName, AccountName, CampaignName, Date
+# カラム: Impressions, Clicks, CostIncludingFees, Conversions, DeviceCategory, ServiceNameJA, PromotionName, AccountName, CampaignName, Date, ServiceNameJA_Media
 # 指標: CTR=Clicks/Impressions, CPA=CostIncludingFees/Conversions, CPC=CostIncludingFees/Clicks, CVR=Conversions/Clicks
 # ルール: ユーザーの指示に最も関連性の高い指標を選択してSQLを生成してください。CostはCostIncludingFeesを、ConversionsはConversionsを使用してください。DeviceCategoryごとのパフォーマンス比較を優先してください。
 # 出力: 実行可能な BigQuery SQL だけ返す（説明なし）
@@ -134,7 +134,7 @@ PROMPT_DEFINITIONS = {
 # あなたはターゲット分析の専門家です。
 # ユーザー指示: {user_input}
 # 分析対象: `vorn-digi-mktg-poc-635a.toki_air.LookerStudio_report_gender`
-# カラム: Impressions, Clicks, CostIncludingFees, Conversions, UnifiedGenderJA, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date
+# カラム: Impressions, Clicks, CostIncludingFees, Conversions, UnifiedGenderJA, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date, ServiceNameJA_Media
 # 指標: CTR=Clicks/Impressions, CPA=CostIncludingFees/Conversions, CPC=CostIncludingFees/Clicks, CVR=Conversions/Clicks
 # ルール: ユーザーの指示に最も関連性の高い指標を選択してSQLを生成してください。CostはCostIncludingFeesを、ConversionsはConversionsを使用してください。UnifiedGenderJAごとのパフォーマンス分析を優先してください。
 # 出力: 実行可能な BigQuery SQL だけ返す（説明なし）
@@ -146,10 +146,10 @@ PROMPT_DEFINITIONS = {
 # あなたはオーディエンスターゲティングの専門家です。
 # ユーザー指示: {user_input}
 # 分析対象: `vorn-digi-mktg-poc-635a.toki_air.LookerStudio_report_gender`
-# カラム: Impressions, Clicks, CostIncludingFees, Conversions, InterestName, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date
+# カラム: Impressions, Clicks, CostIncludingFees, Conversions, InterestName, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date, ServiceNameJA_Media
 # 指標: CTR=Clicks/Impressions, CPA=CostIncludingFees/Conversions, CPC=CostIncludingFees/Clicks, CVR=Conversions/Clicks
 # ルール: ユーザーの指示に最も関連性の高い指標を選択してSQLを生成してください。CostはCostIncludingFeesを、ConversionsはConversionsを使用してください。InterestNameごとのパフォーマンス分析を優先してください。
-# 出力: 実行可能な BigQuery SQL だけ返す（説明なし）
+# 出力: 実行可能な SQL だけ返す（説明なし）
 """
     },
     "placement": {
@@ -158,10 +158,10 @@ PROMPT_DEFINITIONS = {
 # あなたはディスプレイ広告の分析専門家です。
 # ユーザー指示: {user_input}
 # 分析対象: `vorn-digi-mktg-poc-635a.toki_air.LookerStudio_report_placement`
-# カラム: Impressions, Clicks, CostIncludingFees, Conversions, Placement, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date
+# カラム: Impressions, Clicks, CostIncludingFees, Conversions, Placement, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date, ServiceNameJA_Media
 # 指標: CTR=Clicks/Impressions, CPA=CostIncludingFees/Conversions, CPC=CostIncludingFees/Clicks, CVR=Conversions/Clicks
 # ルール: ユーザーの指示に最も関連性の高い指標を選択してSQLを生成してください。CostはCostIncludingFeesを、ConversionsはConversionsを使用してください。Placementごとのパフォーマンス分析を優先してください。
-# 出力: 実行可能な BigQuery SQL だけ返す（説明なし）
+# 出力: 実行可能な SQL だけ返す（説明なし）
 """
     },
     "search_query": {
@@ -170,10 +170,10 @@ PROMPT_DEFINITIONS = {
 # あなたは検索連動型広告の分析専門家です。
 # ユーザー指示: {user_input}
 # 分析対象: `vorn-digi-mktg-poc-635a.toki_air.LookerStudio_report_search_query`
-# カラム: Impressions, Clicks, CostIncludingFees, Conversions, Query, UnifiedQueryMatchTypeWithVariantJA, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date
+# カラム: Impressions, Clicks, CostIncludingFees, Conversions, Query, UnifiedQueryMatchTypeWithVariantJA, ServiceNameJA, PromotionName, AccountName, CampaignName, AdGroupName, Date, ServiceNameJA_Media
 # 指標: CTR=Clicks/Impressions, CPA=CostIncludingFees/Conversions, CPC=CostIncludingFees/Clicks, CVR=Conversions/Clicks
 # ルール: ユーザーの指示に最も関連性の高い指標を選択してSQLを生成してください。CostはCostIncludingFeesを、ConversionsはConversionsを使用してください。Queryごとのパフォーマンス分析を優先してください。
-# 出力: 実行可能な BigQuery SQL だけ返す（説明なし）
+# 出力: 実行可能な SQL だけ返す（説明なし）
 """
     }
 }

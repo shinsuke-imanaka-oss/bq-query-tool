@@ -87,11 +87,18 @@ def run_analysis_flow(user_input: str, filters: dict, apply_date: bool, apply_me
             if not info:
                 st.error("分析対象のテーブルが見つかりませんでした。"); return
 
+            # フィルタ条件を文字列として構築
             filter_context = build_where_clause(filters, apply_date, apply_media, apply_campaign)
-            prompt = info["template"].format(user_input=user_input)
-            prompt_with_filter = f"{prompt}\n#追加のフィルタ条件:\n#以下のWHERE句を必ずSQLに含めてください。\n#`{filter_context}`"
 
-            generated_sql = generate_sql(model, prompt_with_filter if filter_context else prompt)
+            # フィルタが指定されている場合のみ、プロンプトに条件を組み込む
+            if filter_context:
+                prompt = info["template"].format(user_input=user_input)
+                prompt_with_filter = f"{prompt}\n#追加のフィルタ条件:\n#以下のWHERE句を必ずSQLに含めてください。\n#`{filter_context}`"
+                generated_sql = generate_sql(model, prompt_with_filter)
+            else:
+                # フィルタが指定されていない場合は、元のプロンプトでSQLを生成
+                prompt = info["template"].format(user_input=user_input)
+                generated_sql = generate_sql(model, prompt)
 
         with st.spinner("BigQueryでSQLを実行中です..."):
             final_sql, df, is_success = execute_bigquery_with_retry(bq_client, model, generated_sql)
