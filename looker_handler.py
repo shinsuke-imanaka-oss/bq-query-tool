@@ -125,6 +125,13 @@ def show_looker_studio_integration(bq_client, model, key_prefix=""):
     base_url = f"https://lookerstudio.google.com/embed/reporting/{REPORT_ID}"
     final_url = f"{base_url}/page/{selected_page_id}?params={encoded_params}"
 
+    # ★★★ ここにデバッグ用のコードを追加 ★★★
+    st.subheader("💡 デバッグ情報")
+    st.write(f"**生成されたURL:** `{final_url}`")
+    st.write(f"**パラメータ辞書:** `{params}`")
+    st.markdown("---")
+    # ★★★ ここまで ★★★
+
     # iframeで表示
     st.components.v1.iframe(final_url, height=600, scrolling=True)
     st.markdown("---")
