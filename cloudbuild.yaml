@@ -1,24 +1,26 @@
 steps:
-# Dockerイメージをビルドするステップ
+# Dockerイメージをビルド
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/streamlit-bq-tool:$COMMIT_SHA', '.']  # <- 実際のCloudRun名に変更
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/streamlit-bq-tool:$COMMIT_SHA', '.']
 
-# Cloud Runにデプロイするステップ
-- name: 'gcr.io/cloud-builders/gcloud'
+# Artifact Registry / Container Registry に push
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/streamlit-bq-tool:$COMMIT_SHA']
+
+# Cloud Run にデプロイ
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
   args:
-  - 'run'
-  - 'deploy'
-  - 'streamlit-bq-tool' # <- 実際のCloudRun名に変更
-  - '--image'
-  - 'gcr.io/$PROJECT_ID/streamlit-bq-tool:$COMMIT_SHA' # <- 実際のCloudRun名に変更
-  - '--region'
-  - 'us-central1' # <- リージョンを変更
-  - '--platform'
-  - 'managed'
-  - '--allow-unauthenticated'
-images:
-- 'gcr.io/$PROJECT_ID/gstreamlit-bq-tool:$COMMIT_SHA' # <- 実際のCloudRun名に変更
+    - run
+    - deploy
+    - streamlit-bq-tool
+    - --image=gcr.io/$PROJECT_ID/streamlit-bq-tool:$COMMIT_SHA
+    - --region=us-central1
+    - --platform=managed
+    - --allow-unauthenticated
 
-# ログ設定を追加
+images:
+- 'gcr.io/$PROJECT_ID/streamlit-bq-tool:$COMMIT_SHA'
+
 options:
   logging: CLOUD_LOGGING_ONLY
