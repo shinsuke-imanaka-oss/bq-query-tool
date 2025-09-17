@@ -82,6 +82,13 @@ def main():
         st.markdown("---")
 
         st.header("レポートフィルタ")
+
+        # ★ ここにトグルスイッチを追加 ★
+        st.session_state.apply_streamlit_filters = st.checkbox(
+            "StreamlitのフィルタをLooker Studioに適用",
+            value=st.session_state.get("apply_streamlit_filters", True)
+        )
+
         show_filter_ui(bq_client)
 
         st.markdown("---")

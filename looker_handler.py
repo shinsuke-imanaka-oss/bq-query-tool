@@ -130,8 +130,6 @@ SHEET_PARAM_SETS = {
     },
 }
 
-# ... (前回の回答で提示した show_looker_studio_integration 関数の修正コード) ...
-
 @st.cache_data(ttl=43200)
 def get_filter_options(_bq_client, table_id, column_name):
     """BigQueryからフィルタの選択肢を取得する"""
@@ -226,52 +224,56 @@ def show_looker_studio_integration(bq_client, model, key_prefix="", sheet_analys
     params = {}
 
 
-    # 日付フィルタ
-    date_params = param_sets.get("date", [])
-    # date_params が存在し、filters に start_date と end_date がある場合のみ処理
-    if date_params and filters.get("start_date") and filters.get("end_date"):
-        start_date_str = filters["start_date"].strftime("%Y%m%d")
-        end_date_str = filters["end_date"].strftime("%Y%m%d")
-        for param_name in date_params:
-            # Looker Studioの開始日パラメータと終了日パラメータを適切に設定
-            if "start_date" in param_name:
-                params[param_name] = start_date_str
-            elif "end_date" in param_name:
-                params[param_name] = end_date_str
+    # Streamlitのフィルタ適用がONの場合のみパラメータを渡す
+    if st.session_state.get("apply_streamlit_filters", True):
+        # 日付フィルタ
+        date_params = param_sets.get("date", [])
+        if date_params and filters.get("start_date") and filters.get("end_date"):
+            start_date_str = filters["start_date"].strftime("%Y%m%d")
+            end_date_str = filters["end_date"].strftime("%Y%m%d")
+            for param_name in date_params:
+                if "start_date" in param_name:
+                    params[param_name] = start_date_str
+                elif "end_date" in param_name:
+                    params[param_name] = end_date_str
 
-    # メディアフィルタ
-    media_params = param_sets.get("media", [])
-    # filters.get("media") が空リストでない場合のみ処理
-    if filters.get("media"):
-        media_value = ",".join(filters["media"])
-        for param_name in media_params:
-            params[param_name] = media_value
-    else: # メディアが何も選択されていない場合はパラメータを空文字列で設定
-        for param_name in media_params:
-            params[param_name] = ""
+        # メディアフィルタ
+        media_params = param_sets.get("media", [])
+        if filters.get("media"):
+            media_value = ",".join(filters["media"])
+            for param_name in media_params:
+                params[param_name] = media_value
+        else:
+            for param_name in media_params:
+                params[param_name] = ""
 
-    # キャンペーンフィルタ
-    campaign_params = param_sets.get("campaign", [])
-    # filters.get("campaigns") が空リストでない場合のみ処理
-    if filters.get("campaigns"):
-        campaign_value = ",".join(filters["campaigns"])
-        for param_name in campaign_params:
-            params[param_name] = campaign_value
-    else: # キャンペーンが何も選択されていない場合はパラメータを空文字列で設定
-        for param_name in campaign_params:
-            params[param_name] = ""
-
+        # キャンペーンフィルタ
+        campaign_params = param_sets.get("campaign", [])
+        if filters.get("campaigns"):
+            campaign_value = ",".join(filters["campaigns"])
+            for param_name in campaign_params:
+                params[param_name] = campaign_value
+        else:
+            for param_name in campaign_params:
+                params[param_name] = ""
+    
     # URL生成
     params_json = json.dumps(params)
     encoded_params = quote(params_json)
     base_url = f"https://lookerstudio.google.com/embed/reporting/{REPORT_ID}"
     final_url = f"{base_url}/page/{selected_page_id}?params={encoded_params}"
 
+    # Looker Studioのフィルタを非表示にするパラメータを条件付きで追加
+    if st.session_state.get("apply_streamlit_filters", True):
+        final_url += "&hideFilters=true"
+    else:
+        final_url += "&hideFilters=false"
+
     # デバッグ情報
-    st.subheader("💡 デバッグ情報")
-    st.write(f"**生成されたURL:** `{final_url}`")
-    st.write(f"**パラメータ辞書:** `{params}`")
-    st.markdown("---")
+    #st.subheader("💡 デバッグ情報")
+    #st.write(f"**生成されたURL:** `{final_url}`")
+    #st.write(f"**パラメータ辞書:** `{params}`")
+    #st.markdown("---")
 
     # iframeで表示
     st.components.v1.iframe(final_url, height=600, scrolling=True)
