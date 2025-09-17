@@ -11,6 +11,7 @@ import base64
 
 from looker_handler import show_looker_studio_integration, show_filter_ui
 from ui_components import show_analysis_workbench
+from dashboard_analyzer import SHEET_ANALYSIS_QUERIES, get_ai_dashboard_comment
 
 # 環境変数からGCPプロジェクトIDとロケーションを取得
 PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "vorn-digi-mktg-poc-635a")
@@ -42,13 +43,6 @@ def init_session_state():
     defaults = {
         "sql": "", "df": pd.DataFrame(), "comment": "", "fig": None,
         "graph_cfg": {}, "is_looker_hidden": False, "editable_sql": "",
-        "filters": {
-            "sheet": "メディア",
-            "start_date": date.today() - timedelta(days=30),
-            "end_date": date.today(),
-            "media": [],
-            "campaigns": []
-        },
         "analysis_history": [],
         "apply_date_filter": True,
         "apply_media_filter": True,
@@ -57,6 +51,10 @@ def init_session_state():
     for key, value in defaults.items():
         if key not in st.session_state:
             st.session_state[key] = value
+
+    # looker_handler.py内のinit_filtersに処理を委譲
+    from looker_handler import init_filters
+    init_filters()
 
 def main():
     """アプリケーションのメイン関数"""
@@ -110,6 +108,7 @@ def main():
         show_looker_studio_integration(
             bq_client=st.session_state.bq_client,
             model=st.session_state.model,
+            sheet_analysis_queries=SHEET_ANALYSIS_QUERIES
         )
 
     elif st.session_state.view_mode == "🤖 AIアシスタント分析":
@@ -119,14 +118,15 @@ def main():
                 show_looker_studio_integration(
                     bq_client=st.session_state.bq_client,
                     model=st.session_state.model,
-                    key_prefix="analysis_view"
+                    key_prefix="analysis_view",
+                    sheet_analysis_queries=SHEET_ANALYSIS_QUERIES
                 )
         with col_analysis:
             with st.container(height=800):
-                show_analysis_workbench()
+                show_analysis_workbench(sheet_analysis_queries=SHEET_ANALYSIS_QUERIES)
     
     elif st.session_state.view_mode == "🤖 AIアシスタント分析（全画面）":
-        show_analysis_workbench()
+        show_analysis_workbench(sheet_analysis_queries=SHEET_ANALYSIS_QUERIES)
 
 if __name__ == "__main__":
     main()

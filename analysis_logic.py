@@ -78,9 +78,81 @@ def build_where_clause(filters: dict, apply_date: bool, apply_media: bool, apply
     # prefix を付けて条件を連結する
     return f" {prefix} " + " AND ".join(where_conditions)
 
-def run_analysis_flow(user_input: str, filters: dict, apply_date: bool, apply_media: bool, apply_campaign: bool):
+def run_summary02_analysis(bq_client, model, filters, sheet_analysis_queries):
+    """サマリー02の複数のレポートを統合してAIコメントを生成する"""
+    df_dict = {}
+    
+    # 実行するクエリのリスト
+    summary_reports = ["サマリー02_年月メディア分布", "サマリー02_年月デバイス分布", "サマリー02_年月性別分布", "サマリー02_年月年齢分布", "サマリー02_時間×曜日", "サマリー02_地域別"]
+
+    with st.spinner("サマリー02のデータ分析を実行中です..."):
+        for report_name in summary_reports:
+            query_info = sheet_analysis_queries.get(report_name)
+            if not query_info:
+                st.warning(f"レポート '{report_name}' のクエリが見つかりません。")
+                continue
+
+            # supported_filters に基づいてフィルタを適用
+            supported_filters = query_info.get("supported_filters", ["date", "media", "campaign"])
+            where_clause = build_where_clause(
+                filters,
+                apply_date="date" in supported_filters,
+                apply_media="media" in supported_filters,
+                apply_campaign="campaign" in supported_filters
+            )
+            final_query = query_info["query"].format(table=query_info["table"], where_clause=where_clause)
+            
+            try:
+                df = bq_client.query(final_query).to_dataframe()
+                if not df.empty:
+                    # 時間×曜日のデータはクロス集計
+                    if report_name == "サマリー02_時間×曜日":
+                        df_pivot = pd.pivot_table(df, values='Clicks', index='HourOfDay', columns='DayOfWeekJA', fill_value=0)
+                        # 列の順序を日本語の曜日に設定
+                        days_order = ['月', '火', '水', '木', '金', '土', '日']
+                        ordered_cols = [col for col in days_order if col in df_pivot.columns]
+                        df_pivot = df_pivot[ordered_cols]
+                        df_dict[report_name] = df_pivot
+                    else:
+                        df_dict[report_name] = df
+            except Exception as e:
+                st.error(f"レポート '{report_name}' のデータ取得中にエラーが発生しました: {e}")
+                df_dict[report_name] = pd.DataFrame()
+
+    with st.spinner("Geminiが分析コメントを生成中です..."):
+        prompt = f"""
+        あなたは優秀なデータアナリストです。以下の複数のデータセットを総合的に分析し、全体像を要約してください。
+        重要な傾向や示唆を、箇条書きで3つ以内にまとめて、マーケティング担当者向けに分かりやすく解説してください。
+
+        [分析データセット]
+        {json.dumps({k: v.head().to_dict(orient='records') for k, v in df_dict.items()}, ensure_ascii=False, default=json_converter)}
+        """
+        response = model.generate_content(prompt)
+        st.session_state.comment = response.text.strip()
+    
+    # グラフ表示用に、最初に見つかったデータフレームをセッションに格納
+    first_df_name = list(df_dict.keys())[0] if df_dict else None
+    if first_df_name:
+        st.session_state.df = df_dict[first_df_name]
+        st.session_state.sql = "" # 統合分析のためSQLは空に
+        st.session_state.editable_sql = ""
+        # グラフ設定はデフォルト値をセット
+        cfg = {"main_chart_type": "棒グラフ", "x_axis": df_dict[first_df_name].columns[0], "y_axis_left": "Clicks", "y_axis_right": "なし", "legend_col": "なし"}
+        st.session_state.graph_cfg = cfg
+        st.success("分析完了！")
+    else:
+        st.warning("データが取得できませんでした。フィルタ条件を見直してください。")
+
+
+def run_analysis_flow(user_input: str, filters: dict, apply_date: bool, apply_media: bool, apply_campaign: bool, sheet_analysis_queries):
     """分析指示から一連の処理を実行する"""
     bq_client, model = st.session_state.bq_client, st.session_state.model
+
+    # サマリー02の場合、特別処理を呼び出す
+    if user_input == "サマリー02":
+        run_summary02_analysis(bq_client, model, filters, sheet_analysis_queries)
+        return
+
     try:
         with st.spinner("GeminiがSQLを生成中です..."):
             info = select_best_prompt(user_input)
@@ -123,7 +195,7 @@ def run_analysis_flow(user_input: str, filters: dict, apply_date: bool, apply_me
     except Exception as e:
         st.error(f"予期せぬエラー: {e}")
 
-def rerun_sql_flow(sql_query: str, filters: dict, apply_date: bool, apply_media: bool, apply_campaign: bool):
+def rerun_sql_flow(sql_query: str, filters: dict, apply_date: bool, apply_media: bool, apply_campaign: bool, sheet_analysis_queries):
     """ユーザーが修正したSQLを再実行する"""
     bq_client, model = st.session_state.bq_client, st.session_state.model
     try:

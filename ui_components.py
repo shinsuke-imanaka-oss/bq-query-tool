@@ -13,7 +13,7 @@ ANALYSIS_RECIPES = {
     "デバイス別パフォーマンス比較": "先月の実績をデバイスカテゴリ別（PC, スマートフォン, タブレット）に集計し、デバイスごとのコンバージョン数とCPAを比較してください。"
     }
 
-def show_analysis_workbench():
+def show_analysis_workbench(sheet_analysis_queries):
     """右側の分析ワークベンチUIを描画する"""
     st.header("🤖 AIアシスタント分析")
 
@@ -50,7 +50,8 @@ def show_analysis_workbench():
                 st.session_state.filters,
                 st.session_state.apply_date_filter,
                 st.session_state.apply_media_filter,
-                st.session_state.apply_campaign_filter
+                st.session_state.apply_campaign_filter,
+                sheet_analysis_queries
             )
             st.session_state.editable_sql = st.session_state.get("sql", "")
 
@@ -148,7 +149,8 @@ def show_analysis_workbench():
                         st.session_state.filters,
                         st.session_state.apply_date_filter,
                         st.session_state.apply_media_filter,
-                        st.session_state.apply_campaign_filter
+                        st.session_state.apply_campaign_filter,
+                        sheet_analysis_queries
                     )
             with st.expander("テーブルデータとダウンロード"):
                 st.dataframe(st.session_state.df)
